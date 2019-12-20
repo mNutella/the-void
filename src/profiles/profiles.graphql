@@ -1,0 +1,27 @@
+type Query {
+  getProfiles: [Profile]
+  profile(id: ID!): Profile
+}
+
+type Mutation {
+  createProfile(createProfileInput: CreateProfileInput): Profile
+}
+
+type Subscription {
+  profileCreated: Profile
+}
+
+type Profile {
+  id: Int
+  name: String
+  city: String
+  type: Int
+  info: String
+}
+
+input CreateProfileInput {
+  name: String
+  city: String
+  type: Int
+  info: String
+}
