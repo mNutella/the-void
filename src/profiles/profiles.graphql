@@ -1,6 +1,6 @@
 type Query {
   getProfiles: [Profile]
-  profile(id: ID!): Profile
+  profile(id: String!): Profile
 }
 
 type Mutation {
@@ -12,7 +12,7 @@ type Subscription {
 }
 
 type Profile {
-  id: Int
+  id: String
   name: String
   city: String
   type: Int

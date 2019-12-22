@@ -1,10 +1,9 @@
-import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { ProfilesService } from './profiles.service';
-import { Profile } from '../graphql';
 import { ProfilesGuard } from './profiles.guard';
-import { CreateProfileDto } from './dto/create-profile.dto';
+import { ProfileDTO } from './dto/profile.dto';
 
 const pubSub = new PubSub();
 
@@ -20,16 +19,16 @@ export class ProfilesResolver {
 
   @Query('profile')
   async findOneById(
-    @Args('id', ParseIntPipe)
-    id: number,
-  ): Promise<Profile> {
+    @Args('id')
+    id: string,
+  ): Promise<ProfileDTO[]> {
     return await this.profilesService.findOneById(id);
   }
 
   @Mutation('createProfile')
   async create(
-    @Args('createProfileInput') args: CreateProfileDto,
-  ): Promise<Profile> {
+    @Args('createProfileInput') args: ProfileDTO,
+  ): Promise<ProfileDTO> {
     const createdProfile = await this.profilesService.create(args);
     pubSub.publish('profileCreated', { profileCreated: createdProfile });
     return createdProfile;

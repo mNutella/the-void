@@ -17,7 +17,7 @@ export abstract class IMutation {
 }
 
 export class Profile {
-    id?: number;
+    id?: string;
     name?: string;
     city?: string;
     type?: number;
