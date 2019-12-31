@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { AlgoliaModuleOptions } from '../algolia/algolia-module-options';
 
 require('dotenv').config();
 
@@ -33,7 +34,7 @@ class ConfigService {
       type: 'postgres',
 
       host: this.getValue('POSTGRES_HOST'),
-      port: parseInt(this.getValue('POSTGRES_PORT')),
+      port: parseInt(this.getValue('POSTGRES_PORT'), 10),
       username: this.getValue('POSTGRES_USER'),
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
@@ -51,6 +52,15 @@ class ConfigService {
       ssl: this.isProduction(),
     };
   }
+
+  // TODO: Add GraphQL config
+
+  public getAlgoliaConfig(): AlgoliaModuleOptions {
+    return {
+      applicationId: this.getValue('ALGOLIA_APP_ID'),
+      apiKey: this.getValue('ALGOLIA_API_KEY'),
+    };
+  }
 }
 
 const configService = new ConfigService(process.env).ensureValues([
@@ -59,6 +69,8 @@ const configService = new ConfigService(process.env).ensureValues([
   'POSTGRES_USER',
   'POSTGRES_PASSWORD',
   'POSTGRES_DATABASE',
+  'ALGOLIA_APP_ID',
+  'POSTGRES_USER',
 ]);
 
 export { configService };

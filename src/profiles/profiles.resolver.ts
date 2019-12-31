@@ -21,7 +21,7 @@ export class ProfilesResolver {
   async findOneById(
     @Args('id')
     id: string,
-  ): Promise<ProfileDTO[]> {
+  ): Promise<ProfileDTO> {
     return await this.profilesService.findOneById(id);
   }
 

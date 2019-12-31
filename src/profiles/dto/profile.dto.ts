@@ -41,7 +41,7 @@ export class ProfileDTO implements Readonly<ProfileDTO> {
     it.name = profile.name;
     it.type = profile.type;
     it.info = profile.info;
-    it.city = profile.info;
+    it.city = profile.city;
     it.createDateTime = new Date();
     it.createdBy = 'Def';
     it.lastChangedBy = 'Def';
