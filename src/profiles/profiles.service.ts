@@ -31,6 +31,6 @@ export class ProfilesService {
 
   // TODO: Remove this method
   public async algoliaIndexes(): Promise<any> {
-    return await this.algoliaService.listIndexes();
+    return await this.algoliaService.listIndices();
   }
 }

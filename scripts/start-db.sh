@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-SERVER="void_database_server";
-PW="mysecretpassword";
-DB="void_database";
+SERVER="127.0.0.1";
+PW="admin";
+DB="the-void";
 
 echo "echo stop & remove old docker [$SERVER] and starting new fresh instance of [$SERVER]"
 (docker kill $SERVER || :) && \

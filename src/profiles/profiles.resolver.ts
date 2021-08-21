@@ -1,11 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { PubSub } from 'graphql-subscriptions';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+// import { PubSub } from 'graphql-subscriptions';
 import { ProfilesService } from './profiles.service';
 import { ProfilesGuard } from './profiles.guard';
 import { ProfileDTO } from './dto/profile.dto';
 
-const pubSub = new PubSub();
+// const pubSub = new PubSub();
 
 @Resolver('Profiles')
 export class ProfilesResolver {
@@ -30,12 +30,12 @@ export class ProfilesResolver {
     @Args('createProfileInput') args: ProfileDTO,
   ): Promise<ProfileDTO> {
     const createdProfile = await this.profilesService.create(args);
-    pubSub.publish('profileCreated', { profileCreated: createdProfile });
+    // pubSub.publish('profileCreated', { profileCreated: createdProfile });
     return createdProfile;
   }
 
-  @Subscription('profileCreated')
-  profileCreated() {
-    return pubSub.asyncIterator('profileCreated');
-  }
+  // @Subscription('profileCreated')
+  // profileCreated() {
+  //   return pubSub.asyncIterator('profileCreated');
+  // }
 }

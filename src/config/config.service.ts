@@ -1,7 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AlgoliaModuleOptions } from '../algolia/algolia-module-options';
+import { config as setConfig } from 'dotenv';
 
-require('dotenv').config();
+setConfig();
 
 class ConfigService {
   constructor(private env: { [k: string]: string | undefined }) {}
@@ -70,7 +71,7 @@ const configService = new ConfigService(process.env).ensureValues([
   'POSTGRES_PASSWORD',
   'POSTGRES_DATABASE',
   'ALGOLIA_APP_ID',
-  'POSTGRES_USER',
+  'ALGOLIA_API_KEY',
 ]);
 
 export { configService };

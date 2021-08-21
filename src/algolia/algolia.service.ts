@@ -1,46 +1,42 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as algoliasearch from 'algoliasearch';
+import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
+import { RequestOptions } from '@algolia/transporter';
 import {
-  Action,
-  ApiKeyOptions,
-  Client,
-  Index,
-  Log,
-  LogsOptions,
-  MultiResponse,
-  QueryParameters,
-  SearchForFacetValues,
-  SecuredApiOptions,
-  Task,
-  UpdateIndexTask,
-  UpdateApiKeyTask,
-  BatchTask,
-  AddApiKeyTask,
-  DeleteApiKeyTask,
-} from 'algoliasearch';
+  MultipleQueriesQuery,
+  MultipleQueriesResponse,
+  IndexOperationResponse,
+  SecuredApiKeyRestrictions,
+  ApiKeyACLType,
+  UpdateApiKeyOptions,
+  UpdateApiKeyResponse,
+  AddApiKeyOptions,
+  AddApiKeyResponse,
+  DeleteApiKeyResponse,
+  ListApiKeysResponse,
+  MultipleBatchRequest,
+  MultipleBatchResponse,
+  GetLogsResponse
+} from '@algolia/client-search';
+import { WaitablePromise } from '@algolia/client-common';
 import { AlgoliaModuleOptions } from './algolia-module-options';
 import { ALGOLIA_MODULE_OPTIONS } from './algolia.constants';
 
 @Injectable()
 export class AlgoliaService {
-  private readonly algoliaClient: Client;
+  private readonly algoliaClient: SearchClient;
 
   constructor(
     @Inject(ALGOLIA_MODULE_OPTIONS)
     private readonly options: AlgoliaModuleOptions,
   ) {
-    this.algoliaClient = algoliasearch(
-      options.applicationId,
-      options.apiKey,
-      options.clientOptions,
-    );
+    this.algoliaClient = algoliasearch(options.applicationId, options.apiKey, options.clientOptions);
   }
 
   /**
    * Initialization of the index
    * https://github.com/algolia/algoliasearch-client-js#init-index---initindex
    */
-  initIndex(indexName: string): Index {
+  initIndex(indexName: string): SearchIndex {
     return this.algoliaClient.initIndex(indexName);
   }
 
@@ -52,20 +48,20 @@ export class AlgoliaService {
     queries: Array<{
       indexName: string;
       query: string;
-      params: QueryParameters;
+      params: MultipleQueriesQuery;
     }>,
-  ): Promise<MultiResponse<T>> {
+  ): Promise<MultipleQueriesResponse<T>> {
     return this.algoliaClient.search(queries);
   }
 
   /**
    * Query for facet values of a specific facet
    */
-  searchForFacetValues(
-    queries: [{ indexName: string; params: SearchForFacetValues.Parameters }],
-  ): Promise<SearchForFacetValues.Response[]> {
-    return this.algoliaClient.searchForFacetValues(queries);
-  }
+  // searchForFacetValues(
+  //   queries: [{ indexName: string; params: SearchForFacetValues.Parameters }],
+  // ): Promise<SearchForFacetValues.Response[]> {
+  //   return this.algoliaClient.searchForFacetValues(queries);
+  // }
 
   /**
    * clear browser cache
@@ -86,39 +82,39 @@ export class AlgoliaService {
   /**
    * Add a header to be sent with all upcoming requests
    */
-  setExtraHeader(name: string, value: string): void {
-    this.algoliaClient.setExtraHeader(name, value);
-  }
+  // setExtraHeader(name: string, value: string): void {
+  //   this.algoliaClient.setExtraHeader(name, value);
+  // }
 
   /**
    * Get the value of an extra header
    */
-  getExtraHeader(name: string): string {
-    return this.algoliaClient.getExtraHeader(name);
-  }
+  // getExtraHeader(name: string): string {
+  //   return this.algoliaClient.getExtraHeader(name);
+  // }
 
   /**
    * Remove an extra header for all upcoming requests
    */
-  unsetExtraHeader(name: string): void {
-    this.algoliaClient.unsetExtraHeader(name);
-  }
+  // unsetExtraHeader(name: string): void {
+  //   this.algoliaClient.unsetExtraHeader(name);
+  // }
 
   /**
    * List all your indices along with their associated information (number of entries, disk size, etc.)
    * https://github.com/algolia/algoliasearch-client-js#list-indices---listindexes
    */
-  listIndexes(): Promise<any> {
-    return this.algoliaClient.listIndexes();
+  listIndices(): Promise<any> {
+    return this.algoliaClient.listIndices();
   }
 
   /**
    * Delete a specific index
    * https://github.com/algolia/algoliasearch-client-js#delete-index---deleteindex
    */
-  deleteIndex(name: string): Promise<Task> {
-    return this.algoliaClient.deleteIndex(name);
-  }
+  // deleteIndex(name: string): Promise<Task> {
+  //   return this.algoliaClient.deleteIndex(name);
+  // }
 
   /**
    * Copy settings of an index from a specific index to a new one
@@ -128,7 +124,7 @@ export class AlgoliaService {
     from: string,
     to: string,
     scope?: Array<'settings' | 'synonyms' | 'rules'>,
-  ): Promise<UpdateIndexTask> {
+  ): WaitablePromise<IndexOperationResponse> {
     return this.algoliaClient.copyIndex(from, to, scope);
   }
 
@@ -136,14 +132,14 @@ export class AlgoliaService {
    * Move index to a new one (and will overwrite the original one)
    * https://github.com/algolia/algoliasearch-client-js#move-index---moveindex
    */
-  moveIndex(from: string, to: string): Promise<UpdateIndexTask> {
+  moveIndex(from: string, to: string): WaitablePromise<IndexOperationResponse> {
     return this.algoliaClient.moveIndex(from, to);
   }
   /**
    * Generate a public API key
    * https://github.com/algolia/algoliasearch-client-js#generate-key---generatesecuredapikey
    */
-  generateSecuredApiKey(key: string, filters: SecuredApiOptions): string {
+  generateSecuredApiKey(key: string, filters: SecuredApiKeyRestrictions): string {
     return this.algoliaClient.generateSecuredApiKey(key, filters);
   }
 
@@ -151,15 +147,15 @@ export class AlgoliaService {
    * Perform multiple operations with one API call to reduce latency
    * https://github.com/algolia/algoliasearch-client-js#custom-batch---batch
    */
-  batch(action: Action[]): Promise<BatchTask> {
-    return this.algoliaClient.batch(action);
+  multipleBatch(requests: MultipleBatchRequest[], requestOptions?: RequestOptions): WaitablePromise<MultipleBatchResponse> {
+    return this.algoliaClient.multipleBatch(requests, requestOptions);
   }
 
   /**
    * Lists global API Keys
    * https://github.com/algolia/algoliasearch-client-js#backup--export-an-index---browse
    */
-  listApiKeys(): Promise<any> {
+  listApiKeys(): Promise<ListApiKeysResponse> {
     return this.algoliaClient.listApiKeys();
   }
 
@@ -167,8 +163,11 @@ export class AlgoliaService {
    * Add global API Keys
    * https://github.com/algolia/algoliasearch-client-js#add-user-key---addapikey
    */
-  addApiKey(scopes: string[], options?: ApiKeyOptions): Promise<AddApiKeyTask> {
-    return this.algoliaClient.addApiKey(scopes, options);
+  addApiKey(
+    acl: ApiKeyACLType[],
+    options?: AddApiKeyOptions & Pick<RequestOptions, Exclude<keyof RequestOptions, 'queryParameters'>>,
+  ): WaitablePromise<AddApiKeyResponse> {
+    return this.algoliaClient.addApiKey(acl, options);
   }
 
   /**
@@ -177,10 +176,9 @@ export class AlgoliaService {
    */
   updateApiKey(
     key: string,
-    scopes: string[],
-    options?: ApiKeyOptions,
-  ): Promise<UpdateApiKeyTask> {
-    return this.algoliaClient.updateApiKey(key, scopes, options);
+    options?: UpdateApiKeyOptions & Pick<RequestOptions, string | number>,
+  ): WaitablePromise<UpdateApiKeyResponse> {
+    return this.algoliaClient.updateApiKey(key, options);
   }
 
   /**
@@ -195,7 +193,7 @@ export class AlgoliaService {
    * Deletes a global key
    * https://github.com/algolia/algoliasearch-client-js#delete-user-key---deleteapikey
    */
-  deleteApiKey(key: string): Promise<DeleteApiKeyTask> {
+  deleteApiKey(key: string): WaitablePromise<DeleteApiKeyResponse> {
     return this.algoliaClient.deleteApiKey(key);
   }
 
@@ -203,7 +201,7 @@ export class AlgoliaService {
    * Get 1000 last events
    * https://github.com/algolia/algoliasearch-client-js#get-logs---getlogs
    */
-  getLogs(options: LogsOptions): Promise<{ logs: Log[] }> {
+  getLogs(options: RequestOptions): Promise<GetLogsResponse> {
     return this.algoliaClient.getLogs(options);
   }
 }
