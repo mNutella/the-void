@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Profile } from './profile.entity';
 import { Repository } from 'typeorm';
-import { ProfileDTO } from './dto/profile.dto';
 import { AlgoliaService } from '../algolia/algolia.service';
+import { CreateProfileInput } from './dto/create-profile.input';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfilesService {
@@ -12,25 +12,20 @@ export class ProfilesService {
     private readonly algoliaService: AlgoliaService,
   ) {}
 
-  public async create(dto: ProfileDTO): Promise<ProfileDTO> {
+  public async create(dto: CreateProfileInput): Promise<CreateProfileInput> {
     // TODO: to understand why toEntity is not a function when 'toEntity' isn't static method
     return this.repo
-      .save(ProfileDTO.toEntity(dto))
-      .then(e => ProfileDTO.fromEntity(e));
+      .save(CreateProfileInput.toEntity(dto))
+      .then(e => CreateProfileInput.fromEntity(e));
   }
 
-  public async findAll(): Promise<ProfileDTO[]> {
+  public async findAll(): Promise<CreateProfileInput[]> {
     return await this.repo
       .find()
-      .then(items => items.map(e => ProfileDTO.fromEntity(e)));
+      .then(items => items.map(e => CreateProfileInput.fromEntity(e)));
   }
 
-  public async findOneById(id: string): Promise<ProfileDTO> {
+  public async findOne(id: string): Promise<CreateProfileInput> {
     return await this.repo.findOne(id);
-  }
-
-  // TODO: Remove this method
-  public async algoliaIndexes(): Promise<any> {
-    return await this.algoliaService.listIndices();
   }
 }

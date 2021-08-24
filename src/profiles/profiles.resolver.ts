@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 // import { PubSub } from 'graphql-subscriptions';
 import { ProfilesService } from './profiles.service';
 import { ProfilesGuard } from './profiles.guard';
-import { ProfileDTO } from './dto/profile.dto';
+import { CreateProfileInput } from './dto/create-profile.input';
 
 // const pubSub = new PubSub();
 
@@ -21,14 +21,14 @@ export class ProfilesResolver {
   async findOneById(
     @Args('id')
     id: string,
-  ): Promise<ProfileDTO> {
-    return await this.profilesService.findOneById(id);
+  ): Promise<CreateProfileInput> {
+    return await this.profilesService.findOne(id);
   }
 
   @Mutation('createProfile')
   async create(
-    @Args('createProfileInput') args: ProfileDTO,
-  ): Promise<ProfileDTO> {
+    @Args('createProfileInput') args: CreateProfileInput,
+  ): Promise<CreateProfileInput> {
     const createdProfile = await this.profilesService.create(args);
     // pubSub.publish('profileCreated', { profileCreated: createdProfile });
     return createdProfile;

@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
-import { BaseEntity } from '../base.entity';
+import { Entity, Column, ManyToMany } from 'typeorm';
+import { Episode } from '../../episodes/entities/episode.entity';
+import { BaseEntity } from '../../base.entity';
 
 @Entity({ name: 'profile' })
 export class Profile extends BaseEntity {
@@ -14,4 +15,7 @@ export class Profile extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300 })
   info: string;
+
+  @ManyToMany(() => Episode, episode => episode.accomplices)
+  episodes: Episode[];
 }
