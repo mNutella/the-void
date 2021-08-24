@@ -38,3 +38,6 @@ ormconfig.json
 
 # ENV
 .env
+
+# Other
+TODO.md
