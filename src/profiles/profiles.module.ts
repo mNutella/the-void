@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfilesResolver } from './profiles.resolver';
 import { ProfilesService } from './profiles.service';
-import { Profile } from './profile.entity';
+import { Profile } from './entities/profile.entity';
 import { configService } from '../config/config.service';
 import { AlgoliaModule } from '../algolia/algolia.module';
 import { AlgoliaService } from '../algolia/algolia.service';

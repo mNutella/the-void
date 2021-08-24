@@ -1,27 +1,41 @@
-type Query {
-  getProfiles: [Profile]
-  profile(id: String!): Profile
-}
-
-type Mutation {
-  createProfile(createProfileInput: CreateProfileInput): Profile
-}
-
-type Subscription {
-  profileCreated: Profile
-}
-
 type Profile {
   id: String
   name: String
   city: String
   type: Int
   info: String
+  episodes: [Episode!] @relation
+}
+
+type Query {
+  getProfiles: [Profile]
+  profile(id: String!): Profile
+}
+
+type Mutation {
+  createProfile(createProfileInput: CreateProfileInput): Profile!
+  updateEpisode(updateEpisodeInput: UpdateEpisodeInput!): Profile!
+  removeEpisode(id: String!): Episode
+}
+
+type Subscription {
+  profileCreated: Profile
 }
 
 input CreateProfileInput {
+  id: String
   name: String
   city: String
   type: Int
   info: String
+  episodes: [Episode] @relation
+}
+
+input UpdateProfileInput {
+  id: String
+  name: String
+  city: String
+  type: Int
+  info: String
+  episodes: [Episode] @relation
 }

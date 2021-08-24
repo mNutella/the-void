@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfilesModule } from './profiles/profiles.module';
 import { configService } from './config/config.service';
+import { EpisodesModule } from './episodes/episodes.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { configService } from './config/config.service';
       installSubscriptionHandlers: true,
     }),
     ProfilesModule,
+    EpisodesModule,
   ],
 })
 export class AppModule {}
