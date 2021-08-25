@@ -4,18 +4,18 @@ type Profile {
   city: String
   type: Int
   info: String
-  episodes: [Episode!] @relation
+  episodes: [Episode]
 }
 
 type Query {
-  getProfiles: [Profile]
+  profiles: [Profile]
   profile(id: String!): Profile
 }
 
 type Mutation {
-  createProfile(createProfileInput: CreateProfileInput): Profile!
-  updateEpisode(updateEpisodeInput: UpdateEpisodeInput!): Profile!
-  removeEpisode(id: String!): Episode
+  createProfile(createProfileInput: CreateProfileInput): Profile
+  updateProfile(updateEpisodeInput: UpdateProfileInput!): Profile
+  removeProfile(id: String!): Profile
 }
 
 type Subscription {
@@ -28,7 +28,7 @@ input CreateProfileInput {
   city: String
   type: Int
   info: String
-  episodes: [Episode] @relation
+  episodes: [CreateEpisodeInput!]
 }
 
 input UpdateProfileInput {
@@ -37,5 +37,5 @@ input UpdateProfileInput {
   city: String
   type: Int
   info: String
-  episodes: [Episode] @relation
+  episodes: [UpdateEpisodeInput!]
 }

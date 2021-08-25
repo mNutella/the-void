@@ -16,7 +16,7 @@ export class EpisodesService {
 
   async findAll(): Promise<CreateEpisodeInput[]> {
     return await this.repo
-      .find()
+      .find({ relations: ['accomplices'] })
       .then((items) => items.map((e) => CreateEpisodeInput.fromEntity(e)));
   }
 

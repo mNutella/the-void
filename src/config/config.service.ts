@@ -1,6 +1,6 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AlgoliaModuleOptions } from '../algolia/algolia-module-options';
 import { config as setConfig } from 'dotenv';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { AlgoliaModuleOptions } from '@modules/algolia/algolia-module-options';
 
 setConfig();
 
@@ -40,11 +40,11 @@ class ConfigService {
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: ['dist/src/**/**.js'],
+      migrations: ['dist/src/migration/*.js'],
+      keepConnectionAlive: true,
 
       migrationsTableName: 'migration',
-
-      migrations: ['src/migration/*.ts'],
 
       cli: {
         migrationsDir: 'src/migration',

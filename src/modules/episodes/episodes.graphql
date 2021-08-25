@@ -1,0 +1,41 @@
+scalar Date
+
+type Episode {
+  id: String
+  title: String
+  desc: String
+  sourceUrl: String
+  accomplices: [Profile!]
+  crimeDateTime: Date
+}
+
+type Query {
+  episodes: [Episode]
+  episodesBy(ids: [String]!): [Episode]
+  episode(id: String!): Episode
+}
+
+type Mutation {
+  createEpisode(createEpisodeInput: CreateEpisodeInput!): Episode
+  updateEpisode(updateEpisodeInput: UpdateEpisodeInput!): Episode
+  removeEpisodes(ids: [String!]!): [Episode!]
+  removeEpisode(id: String!): Episode
+}
+
+input CreateEpisodeInput {
+  id: String
+  title: String
+  desc: String
+  sourceUrl: String
+  accomplices: [CreateProfileInput!]
+  crimeDateTime: Date
+}
+
+input UpdateEpisodeInput {
+  id: String!
+  title: String
+  desc: String
+  sourceUrl: String
+  accomplices: [UpdateProfileInput!]
+  crimeDateTime: Date
+}

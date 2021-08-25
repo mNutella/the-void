@@ -1,6 +1,6 @@
 import { IsString, IsUUID, IsInt, IsArray } from 'class-validator';
-import { Episode } from '../../episodes/entities/episode.entity';
 import { Profile } from '../entities/profile.entity';
+import { CreateEpisodeInput } from '@modules/episodes/dto/create-episode.input';
 
 export class CreateProfileInput implements Readonly<CreateProfileInput> {
   @IsUUID()
@@ -19,14 +19,16 @@ export class CreateProfileInput implements Readonly<CreateProfileInput> {
   info: string;
 
   @IsArray()
-  episodes: Episode[];
+  episodes: CreateEpisodeInput[];
 
   public static from(dto: Partial<CreateProfileInput>) {
     const it = new CreateProfileInput();
+
     it.id = dto.id;
     it.name = dto.name;
     it.type = dto.type;
     it.info = dto.info;
+    it.episodes = dto.episodes;
     return it;
   }
 
@@ -36,6 +38,7 @@ export class CreateProfileInput implements Readonly<CreateProfileInput> {
       name: entity.name,
       type: entity.type,
       info: entity.info,
+      episodes: entity.episodes?.map((episode) => CreateEpisodeInput.fromEntity(episode)),
     });
   }
 
@@ -46,6 +49,7 @@ export class CreateProfileInput implements Readonly<CreateProfileInput> {
     it.type = profile.type;
     it.info = profile.info;
     it.city = profile.city;
+    it.episodes = profile.episodes?.map((episode) => CreateEpisodeInput.toEntity(episode));
     it.createDateTime = new Date();
     it.createdBy = 'Admin';
     it.lastChangedBy = 'Admin';

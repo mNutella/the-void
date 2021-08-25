@@ -11,9 +11,9 @@ import { CreateProfileInput } from './dto/create-profile.input';
 export class ProfilesResolver {
   constructor(private readonly profilesService: ProfilesService) {}
 
-  @Query()
+  @Query('profiles')
   @UseGuards(ProfilesGuard)
-  async getProfiles() {
+  async findAll() {
     return await this.profilesService.findAll();
   }
 
@@ -29,9 +29,8 @@ export class ProfilesResolver {
   async create(
     @Args('createProfileInput') args: CreateProfileInput,
   ): Promise<CreateProfileInput> {
-    const createdProfile = await this.profilesService.create(args);
     // pubSub.publish('profileCreated', { profileCreated: createdProfile });
-    return createdProfile;
+    return await this.profilesService.create(args);
   }
 
   // @Subscription('profileCreated')

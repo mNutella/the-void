@@ -1,6 +1,6 @@
-import { IsString, IsUUID, IsInt, IsArray, IsDate } from 'class-validator';
-import { Profile } from '../../profiles/entities/profile.entity';
+import { IsString, IsUUID, IsArray, IsDate } from 'class-validator';
 import { Episode } from '../entities/episode.entity';
+import { CreateProfileInput } from '@modules/profiles/dto/create-profile.input';
 
 export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
   @IsUUID()
@@ -16,7 +16,7 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
   sourceUrl: string;
 
   @IsArray()
-  accomplices: Profile[];
+  accomplices: CreateProfileInput[];
 
   @IsDate()
   crimeDateTime: Date;
@@ -38,7 +38,9 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
       title: entity.title,
       desc: entity.desc,
       sourceUrl: entity.sourceUrl,
-      accomplices: entity.accomplices,
+      accomplices: entity.accomplices?.map((accomplice) =>
+        CreateProfileInput.fromEntity(accomplice),
+      ),
       crimeDateTime: entity.crimeDateTime,
     });
   }
@@ -49,7 +51,9 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
     it.title = episode.title;
     it.desc = episode.desc;
     it.sourceUrl = episode.sourceUrl;
-    it.accomplices = episode.accomplices;
+    it.accomplices = episode.accomplices?.map((accomplice) =>
+      CreateProfileInput.toEntity(accomplice),
+    );
     it.createDateTime = new Date();
     it.createdBy = 'Admin';
     it.lastChangedBy = 'Admin';

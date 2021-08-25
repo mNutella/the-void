@@ -13,7 +13,12 @@
     "incremental": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["algoliasearch", "jest"]
+    "types": ["algoliasearch", "jest"],
+    "paths": {
+      "@modules/*": ["src/modules/*"],
+      "@config/*": ["src/config/*"],
+      "@app/*": ["src/*"]
+    }
   },
   "exclude": ["node_modules", "dist"],
 }
