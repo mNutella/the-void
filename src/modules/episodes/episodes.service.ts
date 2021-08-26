@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEpisodeInput } from './dto/create-episode.input';
@@ -33,15 +33,20 @@ export class EpisodesService {
   async update(id: string, updateEpisodeInput: UpdateEpisodeInput) {
     const updateEpisodeEntity = await this.repo.findOne(id);
 
-    if (!updateEpisodeEntity) throw new Error("Episode doesn't exist");
+    if (!updateEpisodeEntity)
+      throw new HttpException("Episode doesn't exist", HttpStatus.NOT_FOUND);
 
-    return await this.repo.save({ ...updateEpisodeEntity, ...updateEpisodeInput });
+    return (await this.repo.save({
+      ...updateEpisodeEntity,
+      ...updateEpisodeInput,
+    })) as UpdateEpisodeInput;
   }
 
   async removeBy(ids: string[]): Promise<Episode[]> {
     const episodeEntities = await this.repo.find({ where: { id: ids } });
 
-    if (!episodeEntities?.length) throw new Error("Episode doesn't exist");
+    if (!episodeEntities?.length)
+      throw new HttpException("Episodes doen't exist", HttpStatus.NOT_FOUND);
 
     return await this.repo.remove(episodeEntities);
   }
@@ -49,7 +54,8 @@ export class EpisodesService {
   async remove(id: string): Promise<Episode> {
     const episodeEntity = await this.repo.findOne(id);
 
-    if (!episodeEntity) throw new Error("Episode doesn't exist");
+    if (!episodeEntity)
+      throw new HttpException("Episode doesn't exist", HttpStatus.NOT_FOUND);
 
     return await this.repo.remove(episodeEntity);
   }

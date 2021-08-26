@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { EpisodesService } from './episodes.service';
 import { CreateEpisodeInput } from './dto/create-episode.input';
 import { UpdateEpisodeInput } from './dto/update-episode.input';
+import { Episode } from './entities/episode.entity';
 
 @Resolver('Episode')
 export class EpisodesResolver {
@@ -28,17 +29,19 @@ export class EpisodesResolver {
   }
 
   @Mutation('updateEpisode')
-  async update(@Args('updateEpisodeInput') updateEpisodeInput: UpdateEpisodeInput) {
+  async update(
+    @Args('updateEpisodeInput') updateEpisodeInput: UpdateEpisodeInput,
+  ): Promise<UpdateEpisodeInput> {
     return await this.episodesService.update(updateEpisodeInput.id, updateEpisodeInput);
   }
 
   @Mutation('removeEpisodes')
-  async removeBy(@Args('ids') ids: string[]) {
+  async removeBy(@Args('ids') ids: string[]): Promise<Episode[]> {
     return await this.episodesService.removeBy(ids);
   }
 
   @Mutation('removeEpisode')
-  async remove(@Args('id') id: string) {
+  async remove(@Args('id') id: string): Promise<Episode> {
     return await this.episodesService.remove(id);
   }
 }
