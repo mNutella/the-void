@@ -49,7 +49,9 @@ export class CreateProfileInput implements Readonly<CreateProfileInput> {
     it.type = profile.type;
     it.info = profile.info;
     it.city = profile.city;
-    it.episodes = profile.episodes?.map((episode) => CreateEpisodeInput.toEntity(episode));
+    it.episodes = profile.episodes?.map((episode) =>
+      CreateEpisodeInput.toEntity(episode),
+    );
     it.createDateTime = new Date();
     it.createdBy = 'Admin';
     it.lastChangedBy = 'Admin';

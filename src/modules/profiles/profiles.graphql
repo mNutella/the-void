@@ -14,7 +14,7 @@ type Query {
 
 type Mutation {
   createProfile(createProfileInput: CreateProfileInput): Profile
-  updateProfile(updateEpisodeInput: UpdateProfileInput!): Profile
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile
   removeProfile(id: String!): Profile
 }
 

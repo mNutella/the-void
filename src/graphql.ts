@@ -75,7 +75,7 @@ export abstract class IMutation {
 
     abstract createProfile(createProfileInput?: Nullable<CreateProfileInput>): Nullable<Profile> | Promise<Nullable<Profile>>;
 
-    abstract updateProfile(updateEpisodeInput: UpdateProfileInput): Nullable<Profile> | Promise<Nullable<Profile>>;
+    abstract updateProfile(updateProfileInput: UpdateProfileInput): Nullable<Profile> | Promise<Nullable<Profile>>;
 
     abstract removeProfile(id: string): Nullable<Profile> | Promise<Nullable<Profile>>;
 }
