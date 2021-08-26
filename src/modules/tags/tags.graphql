@@ -1,0 +1,28 @@
+type Tag {
+  id: String
+  name: String
+  episodes: [Episode]
+}
+
+type Query {
+  tags: [Tag]!
+  tag(id: String!): Tag
+}
+
+type Mutation {
+  createTag(createTagInput: CreateTagInput!): Tag!
+  updateTag(updateTagInput: UpdateTagInput!): Tag!
+  removeTag(id: String!): Tag
+}
+
+input CreateTagInput {
+  id: String
+  name: String
+  episodes: [CreateEpisodeInput]
+}
+
+input UpdateTagInput {
+  id: String!
+  name: String
+  episodes: [CreateEpisodeInput]
+}

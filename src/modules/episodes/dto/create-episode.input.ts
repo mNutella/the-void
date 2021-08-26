@@ -1,6 +1,7 @@
 import { IsString, IsUUID, IsArray, IsDate } from 'class-validator';
 import { Episode } from '../entities/episode.entity';
 import { CreateProfileInput } from '@modules/profiles/dto/create-profile.input';
+import { CreateTagInput } from '@modules/tags/dto/create-tag.input';
 
 export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
   @IsUUID()
@@ -18,6 +19,9 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
   @IsArray()
   accomplices: CreateProfileInput[];
 
+  @IsArray()
+  tags: CreateTagInput[];
+
   @IsDate()
   crimeDateTime: Date;
 
@@ -28,6 +32,7 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
     it.desc = dto.desc;
     it.sourceUrl = dto.sourceUrl;
     it.accomplices = dto.accomplices;
+    it.tags = dto.tags;
     it.crimeDateTime = dto.crimeDateTime;
     return it;
   }
@@ -41,6 +46,7 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
       accomplices: entity.accomplices?.map((accomplice) =>
         CreateProfileInput.fromEntity(accomplice),
       ),
+      tags: entity.tags?.map((tag) => CreateTagInput.fromEntity(tag)),
       crimeDateTime: entity.crimeDateTime,
     });
   }
@@ -54,6 +60,7 @@ export class CreateEpisodeInput implements Readonly<CreateEpisodeInput> {
     it.accomplices = episode.accomplices?.map((accomplice) =>
       CreateProfileInput.toEntity(accomplice),
     );
+    it.tags = episode.tags?.map((tag) => CreateTagInput.toEntity(tag));
     it.createDateTime = new Date();
     it.createdBy = 'Admin';
     it.lastChangedBy = 'Admin';

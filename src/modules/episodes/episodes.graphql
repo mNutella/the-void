@@ -6,6 +6,7 @@ type Episode {
   desc: String
   sourceUrl: String
   accomplices: [Profile!]
+  tags: [Tag]
   crimeDateTime: Date
 }
 
@@ -28,6 +29,7 @@ input CreateEpisodeInput {
   desc: String
   sourceUrl: String
   accomplices: [CreateProfileInput!]
+  tags: [CreateTagInput]
   crimeDateTime: Date
 }
 
@@ -37,5 +39,6 @@ input UpdateEpisodeInput {
   desc: String
   sourceUrl: String
   accomplices: [UpdateProfileInput!]
+  tags: [CreateTagInput]
   crimeDateTime: Date
 }

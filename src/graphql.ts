@@ -13,6 +13,7 @@ export class CreateEpisodeInput {
     desc?: Nullable<string>;
     sourceUrl?: Nullable<string>;
     accomplices?: Nullable<CreateProfileInput[]>;
+    tags?: Nullable<Nullable<CreateTagInput>[]>;
     crimeDateTime?: Nullable<Date>;
 }
 
@@ -22,6 +23,7 @@ export class UpdateEpisodeInput {
     desc?: Nullable<string>;
     sourceUrl?: Nullable<string>;
     accomplices?: Nullable<UpdateProfileInput[]>;
+    tags?: Nullable<Nullable<CreateTagInput>[]>;
     crimeDateTime?: Nullable<Date>;
 }
 
@@ -43,12 +45,25 @@ export class UpdateProfileInput {
     episodes?: Nullable<UpdateEpisodeInput[]>;
 }
 
+export class CreateTagInput {
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    episodes?: Nullable<Nullable<CreateEpisodeInput>[]>;
+}
+
+export class UpdateTagInput {
+    id: string;
+    name?: Nullable<string>;
+    episodes?: Nullable<Nullable<CreateEpisodeInput>[]>;
+}
+
 export class Episode {
     id?: Nullable<string>;
     title?: Nullable<string>;
     desc?: Nullable<string>;
     sourceUrl?: Nullable<string>;
     accomplices?: Nullable<Profile[]>;
+    tags?: Nullable<Nullable<Tag>[]>;
     crimeDateTime?: Nullable<Date>;
 }
 
@@ -62,6 +77,10 @@ export abstract class IQuery {
     abstract profiles(): Nullable<Nullable<Profile>[]> | Promise<Nullable<Nullable<Profile>[]>>;
 
     abstract profile(id: string): Nullable<Profile> | Promise<Nullable<Profile>>;
+
+    abstract tags(): Nullable<Tag>[] | Promise<Nullable<Tag>[]>;
+
+    abstract tag(id: string): Nullable<Tag> | Promise<Nullable<Tag>>;
 }
 
 export abstract class IMutation {
@@ -78,6 +97,12 @@ export abstract class IMutation {
     abstract updateProfile(updateProfileInput: UpdateProfileInput): Nullable<Profile> | Promise<Nullable<Profile>>;
 
     abstract removeProfile(id: string): Nullable<Profile> | Promise<Nullable<Profile>>;
+
+    abstract createTag(createTagInput: CreateTagInput): Tag | Promise<Tag>;
+
+    abstract updateTag(updateTagInput: UpdateTagInput): Tag | Promise<Tag>;
+
+    abstract removeTag(id: string): Nullable<Tag> | Promise<Nullable<Tag>>;
 }
 
 export class Profile {
@@ -91,6 +116,12 @@ export class Profile {
 
 export abstract class ISubscription {
     abstract profileCreated(): Nullable<Profile> | Promise<Nullable<Profile>>;
+}
+
+export class Tag {
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    episodes?: Nullable<Nullable<Episode>[]>;
 }
 
 type Nullable<T> = T | null;

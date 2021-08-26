@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { Profile } from '@modules/profiles/entities/profile.entity';
 import { BaseEntity } from '@app/base.entity';
+import { Tag } from '@modules/tags/entities/tag.entity';
 
 @Entity({ name: 'episode' })
 export class Episode extends BaseEntity {
@@ -26,10 +27,22 @@ export class Episode extends BaseEntity {
   })
   accomplices: Profile[];
 
+  @ManyToMany(() => Tag, (tag) => tag.episodes)
+  @JoinTable({
+    name: 'episode_tag',
+    joinColumn: {
+      name: 'episode',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag',
+      referencedColumnName: 'id',
+    },
+  })
+  tags: Tag[];
+
   @CreateDateColumn({ type: 'timestamptz', nullable: true })
   crimeDateTime: Date;
-
-  // TODO: Tags
 
   // TODO: Views
 }
