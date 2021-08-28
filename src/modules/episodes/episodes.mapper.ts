@@ -1,7 +1,6 @@
 import { ignore, mapWith } from '@automapper/core';
 import { InjectMapper, AutomapperProfile } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
-import { CreateProfileInput } from '@modules/profiles/dto/create-profile.input';
 import { UpdateProfileInput } from '@modules/profiles/dto/update-profile.input';
 import { Profile } from '@modules/profiles/entities/profile.entity';
 import { Injectable } from '@nestjs/common';
@@ -20,7 +19,7 @@ export class EpisodesMapper extends AutomapperProfile {
     return (mapper: Mapper) => {
       mapper.createMap(Episode, CreateEpisodeInput).forMember(
         (d) => d.accomplices,
-        mapWith(Profile, CreateProfileInput, (s) => s.accomplices),
+        mapWith(Profile, UpdateProfileInput, (s) => s.accomplices),
       );
       mapper.createMap(Episode, UpdateEpisodeInput);
       mapper.createMap(Episode, EpisodeOutput);
@@ -29,7 +28,7 @@ export class EpisodesMapper extends AutomapperProfile {
         .forMember((d) => d.id, ignore())
         .forMember(
           (d) => d.accomplices,
-          mapWith(CreateProfileInput, Profile, (s) => s.accomplices),
+          mapWith(UpdateProfileInput, Profile, (s) => s.accomplices),
         );
       mapper.createMap(UpdateEpisodeInput, Episode);
       mapper.createMap(EpisodeOutput, Episode);
