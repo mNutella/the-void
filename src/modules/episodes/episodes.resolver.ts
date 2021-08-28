@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { EpisodesService } from './episodes.service';
 import { CreateEpisodeInput } from './dto/create-episode.input';
 import { UpdateEpisodeInput } from './dto/update-episode.input';
-import { Episode } from './entities/episode.entity';
+import { EpisodeOutput } from './dto/episode.output';
 
 @Resolver('Episode')
 export class EpisodesResolver {
@@ -24,24 +24,26 @@ export class EpisodesResolver {
   }
 
   @Mutation('createEpisode')
-  async create(@Args('createEpisodeInput') createEpisodeInput: CreateEpisodeInput) {
+  async create(
+    @Args('createEpisodeInput') createEpisodeInput: CreateEpisodeInput,
+  ): Promise<EpisodeOutput> {
     return await this.episodesService.create(createEpisodeInput);
   }
 
   @Mutation('updateEpisode')
   async update(
     @Args('updateEpisodeInput') updateEpisodeInput: UpdateEpisodeInput,
-  ): Promise<UpdateEpisodeInput> {
+  ): Promise<EpisodeOutput> {
     return await this.episodesService.update(updateEpisodeInput.id, updateEpisodeInput);
   }
 
   @Mutation('removeEpisodes')
-  async removeBy(@Args('ids') ids: string[]): Promise<Episode[]> {
+  async removeBy(@Args('ids') ids: string[]): Promise<EpisodeOutput[]> {
     return await this.episodesService.removeBy(ids);
   }
 
   @Mutation('removeEpisode')
-  async remove(@Args('id') id: string): Promise<Episode> {
+  async remove(@Args('id') id: string): Promise<EpisodeOutput> {
     return await this.episodesService.remove(id);
   }
 }
